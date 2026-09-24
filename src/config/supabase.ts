@@ -6,7 +6,7 @@
 // ============================================================================
 
 /** Project Settings → API → Project URL, e.g. https://abcdefgh.supabase.co */
-export const SUPABASE_URL = '';
+export const SUPABASE_URL = 'https://zruthfymozxrhmiiyamo.supabase.co';
 
 /** Project Settings → API → Project API keys → anon / public (or the new "publishable" key) */
 export const SUPABASE_ANON_KEY = 'sb_publishable_2UB1GLHPTLPVARkx4RqEGw_CtNDV-P7';
