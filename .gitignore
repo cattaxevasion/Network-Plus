@@ -1,0 +1,7 @@
+node_modules
+dist
+*.local
+.DS_Store
+# screenshots saved by the Claude app
+Claude outputs/
+dist-fake

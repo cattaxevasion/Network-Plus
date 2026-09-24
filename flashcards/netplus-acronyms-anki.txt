@@ -1,0 +1,165 @@
+#separator:tab
+#html:false
+#tags column:3
+A	Address	N10-009 acronym obj-3.4
+ACL	Access Control List	N10-009 acronym obj-4.3 obj-5.3
+AH	Authentication Header	N10-009 acronym obj-1.4
+AP	Access Point	N10-009 acronym obj-1.2 obj-4.2
+API	Application Programming Interface	N10-009 acronym obj-3.2 obj-3.5
+APIPA	Automatic Private Internet Protocol Addressing	N10-009 acronym obj-1.7
+ARP	Address Resolution Protocol	N10-009 acronym obj-4.2
+AUP	Acceptable Use Policy	N10-009 acronym
+BGP	Border Gateway Protocol	N10-009 acronym obj-2.1
+BNC	Bayonet Neill–Concelman	N10-009 acronym obj-1.5
+BSSID	Basic Service Set Identifier	N10-009 acronym obj-2.3
+BYOD	Bring Your Own Device	N10-009 acronym obj-4.1
+CAM	Content-addressable Memory	N10-009 acronym
+CDN	Content Delivery Network	N10-009 acronym obj-1.2
+CDP	Cisco Discovery Protocol	N10-009 acronym obj-5.5
+CIA	Confidentiality, Integrity, and Availability	N10-009 acronym obj-4.1
+CIDR	Classless Inter-domain Routing	N10-009 acronym obj-1.7
+CLI	Command-line Interface	N10-009 acronym
+CNAME	Canonical Name	N10-009 acronym obj-3.4
+CPU	Central Processing Unit	N10-009 acronym
+CRC	Cyclic Redundancy Check	N10-009 acronym obj-5.2
+DAC	Direct Attach Copper	N10-009 acronym obj-1.5
+DAS	Direct-attached Storage	N10-009 acronym
+DCI	Data Center Interconnect	N10-009 acronym obj-1.8
+DDoS	Distributed Denial-of-service	N10-009 acronym obj-4.2
+DHCP	Dynamic Host Configuration Protocol	N10-009 acronym obj-1.4 obj-3.4 obj-4.2
+DLP	Data Loss Prevention	N10-009 acronym
+DNS	Domain Name System	N10-009 acronym obj-1.4 obj-3.4 obj-4.2
+DNSSEC	Domain Name System Security Extensions	N10-009 acronym obj-3.4
+DoH	DNS over Hypertext Transfer Protocol Secure	N10-009 acronym obj-3.4
+DoS	Denial-of-service	N10-009 acronym obj-4.2
+DoT	DNS over Transport Layer Security	N10-009 acronym obj-3.4
+DR	Disaster Recovery	N10-009 acronym obj-3.3
+EAPoL	Extensible Authentication Protocol over LAN	N10-009 acronym
+EIGRP	Enhanced Interior Gateway Routing Protocol	N10-009 acronym obj-2.1
+EOL	End-of-life	N10-009 acronym obj-3.1
+EOS	End-of-support	N10-009 acronym obj-3.1
+ESP	Encapsulating Security Payload	N10-009 acronym obj-1.4
+ESSID	Extended Service Set Identifier	N10-009 acronym obj-2.3
+EULA	End User License Agreement	N10-009 acronym
+FC	Fibre Channel	N10-009 acronym obj-1.5
+FHRP	First Hop Redundancy Protocol	N10-009 acronym obj-2.1
+FTP	File Transfer Protocol	N10-009 acronym obj-1.4
+GDPR	General Data Protection Regulation	N10-009 acronym obj-4.1
+GRE	Generic Routing Encapsulation	N10-009 acronym obj-1.4
+GUI	Graphical User Interface	N10-009 acronym obj-3.5
+HTTP	Hypertext Transfer Protocol	N10-009 acronym obj-1.4
+HTTPS	Hypertext Transfer Protocol Secure	N10-009 acronym obj-1.4 obj-3.4
+IaaS	Infrastructure as a Service	N10-009 acronym obj-1.3
+IaC	Infrastructure as Code	N10-009 acronym obj-1.8
+IAM	Identity and Access Management	N10-009 acronym obj-4.1
+ICMP	Internet Control Message Protocol	N10-009 acronym obj-1.4
+ICS	Industrial Control System	N10-009 acronym obj-4.1
+IDF	Intermediate Distribution Frame	N10-009 acronym obj-2.4
+IDS	Intrusion Detection System	N10-009 acronym obj-1.2
+IoT	Internet of Things	N10-009 acronym obj-4.1
+IIoT	Industrial Internet of Things	N10-009 acronym obj-4.1
+IKE	Internet Key Exchange	N10-009 acronym obj-1.4
+IP	Internet Protocol	N10-009 acronym obj-1.4 obj-1.7 obj-2.1 obj-3.1 obj-3.4 obj-5.3
+IPAM	Internet Protocol Address Management	N10-009 acronym obj-3.1
+IPS	Intrusion Prevention System	N10-009 acronym obj-1.2
+IPSec	Internet Protocol Security	N10-009 acronym obj-1.4
+IS-IS	Intermediate System to Intermediate System	N10-009 acronym
+LACP	Link Aggregation Control Protocol	N10-009 acronym
+LAN	Local Area Network	N10-009 acronym
+LC	Local Connector	N10-009 acronym obj-1.5
+LDAP	Lightweight Directory Access Protocol	N10-009 acronym obj-1.4 obj-4.1
+LDAPS	Lightweight Directory Access Protocol over SSL	N10-009 acronym obj-1.4
+LLDP	Link Layer Discovery Protocol	N10-009 acronym obj-5.5
+MAC	Media Access Control	N10-009 acronym obj-4.2 obj-4.3
+MDF	Main Distribution Frame	N10-009 acronym obj-2.4
+MDIX	Medium Dependent Interface Crossover	N10-009 acronym
+MFA	Multifactor Authentication	N10-009 acronym obj-4.1
+MIB	Management Information Base	N10-009 acronym obj-3.2
+MPO	Multifiber Push On	N10-009 acronym obj-1.5
+MTBF	Mean Time Between Failure	N10-009 acronym obj-3.3
+MTTR	Mean Time To Repair	N10-009 acronym obj-3.3
+MTU	Maximum Transmission Unit	N10-009 acronym obj-2.2
+MX	Mail Exchange	N10-009 acronym obj-3.4
+NAC	Network Access Control	N10-009 acronym obj-4.3
+NAS	Network-attached Storage	N10-009 acronym obj-1.2
+NAT	Network Address Translation	N10-009 acronym obj-1.3 obj-2.1
+NFV	Network Functions Virtualization	N10-009 acronym obj-1.3
+NIC	Network Interface Cards	N10-009 acronym
+NS	Name Server	N10-009 acronym obj-3.4
+NTP	Network Time Protocol	N10-009 acronym obj-1.4 obj-3.4
+NTS	Network Time Security	N10-009 acronym obj-3.4
+OS	Operating System	N10-009 acronym obj-3.1
+OSPF	Open Shortest Path First	N10-009 acronym obj-2.1
+OSI	Open Systems Interconnection	N10-009 acronym obj-1.1 obj-5.1
+OT	Operational Technology	N10-009 acronym obj-4.1
+PaaS	Platform as a Service	N10-009 acronym obj-1.3
+PAT	Port Address Translation	N10-009 acronym obj-2.1
+PCI DSS	Payment Card Industry Data Security Standards	N10-009 acronym obj-4.1
+PDU	Power Distribution Unit	N10-009 acronym obj-2.4
+PKI	Public Key Infrastructure	N10-009 acronym obj-4.1
+PoE	Power over Ethernet	N10-009 acronym obj-5.2
+PSK	Pre-shared Key	N10-009 acronym obj-2.3
+PTP	Precision Time Protocol	N10-009 acronym obj-3.4
+PTR	Pointer	N10-009 acronym obj-3.4
+QoS	Quality of Service	N10-009 acronym obj-1.2
+QSFP	Quad Small Form-factor Pluggable	N10-009 acronym obj-1.5
+RADIUS	Remote Authentication Dial-in User Service	N10-009 acronym obj-4.1
+RDP	Remote Desktop Protocol	N10-009 acronym obj-1.4
+RFID	Radio Frequency Identifier	N10-009 acronym
+RIP	Routing Information Protocol	N10-009 acronym
+RJ	Registered Jack	N10-009 acronym obj-1.5
+RPO	Recovery Point Objective	N10-009 acronym obj-3.3
+RSTP	Rapid Spanning Tree Protocol	N10-009 acronym
+RTO	Recovery Time Objective	N10-009 acronym obj-3.3
+RX	Receiver	N10-009 acronym obj-5.2
+SaaS	Software as a Service	N10-009 acronym obj-1.3
+SAML	Security Assertion Markup Language	N10-009 acronym obj-4.1
+SAN	Storage Area Network	N10-009 acronym obj-1.2
+SASE	Secure Access Service Edge	N10-009 acronym obj-1.8
+SC	Subscriber Connector	N10-009 acronym obj-1.5
+SCADA	Supervisory Control and Data Acquisition	N10-009 acronym obj-4.1
+SDN	Software-defined Network	N10-009 acronym obj-1.8
+SD-WAN	Software-defined Wide Area Network	N10-009 acronym obj-1.8
+SFP	Small Form-factor Pluggable	N10-009 acronym obj-1.5
+SFTP	Secure File Transfer Protocol	N10-009 acronym obj-1.4
+SIP	Session Initiation Protocol	N10-009 acronym obj-1.4
+SIEM	Security Information and Event Management	N10-009 acronym obj-3.2
+SLA	Service-level Agreement	N10-009 acronym obj-3.1
+SLAAC	Stateless Address Autoconfiguration	N10-009 acronym obj-3.4
+SMB	Server Message Block	N10-009 acronym obj-1.4
+SMTP	Simple Mail Transfer Protocol	N10-009 acronym obj-1.4
+SMTPS	Simple Mail Transfer Protocol Secure	N10-009 acronym obj-1.4
+SNMP	Simple Network Management Protocol	N10-009 acronym obj-1.4 obj-3.2
+SOA	Start of Authority	N10-009 acronym
+SQL	Structured Query Language	N10-009 acronym obj-1.4
+SSE	Security Service Edge	N10-009 acronym obj-1.8
+SSH	Secure Shell	N10-009 acronym obj-1.4 obj-3.5
+SSID	Service Set Identifier	N10-009 acronym obj-2.3
+SSL	Secure Socket Layer	N10-009 acronym obj-1.4
+SSO	Single Sign-on	N10-009 acronym obj-4.1
+ST	Straight Tip	N10-009 acronym obj-1.5
+STP	Shielded Twisted Pair	N10-009 acronym obj-5.2
+SVI	Switch Virtual Interface	N10-009 acronym obj-2.2
+TACACS+	Terminal Access Controller Access Control System Plus	N10-009 acronym obj-4.1
+TCP	Transmission Control Protocol	N10-009 acronym obj-1.4
+TFTP	Trivial File Transfer Protocol	N10-009 acronym obj-1.4
+TTL	Time to Live	N10-009 acronym obj-1.2
+TX	Transmitter	N10-009 acronym obj-5.2
+TXT	Text	N10-009 acronym obj-3.4
+UDP	User Datagram Protocol	N10-009 acronym obj-1.4
+UPS	Uninterruptible Power Supply	N10-009 acronym obj-2.4
+URL	Uniform Resource Locator	N10-009 acronym obj-4.3
+USB	Universal Serial Bus	N10-009 acronym
+UTM	Unified Threat Management	N10-009 acronym
+UTP	Unshielded Twisted Pair	N10-009 acronym obj-5.2
+VIP	Virtual IP	N10-009 acronym obj-2.1
+VLAN	Virtual Local Area Network	N10-009 acronym obj-2.2 obj-4.2 obj-5.3
+VLSM	Variable Length Subnet Mask	N10-009 acronym obj-1.7
+VoIP	Voice over IP	N10-009 acronym
+VPC	Virtual Private Cloud	N10-009 acronym obj-1.3
+VPN	Virtual Private Network	N10-009 acronym obj-1.2 obj-1.3 obj-3.5
+WAN	Wide Area Network	N10-009 acronym obj-1.8
+WPA	Wi-Fi Protected Access	N10-009 acronym obj-2.3
+WPS	Wi-Fi Protected Setup	N10-009 acronym
+VXLAN	Virtual Extensible LAN	N10-009 acronym obj-1.8
+ZTA	Zero Trust Architecture	N10-009 acronym obj-1.8
