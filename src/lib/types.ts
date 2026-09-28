@@ -29,6 +29,8 @@ export interface StudyDay {
   stepsDone: string[];
   reason?: Reason;
   note?: string;
+  /** Calendar date the day was marked Completed / Partial / Skipped (YYYY-MM-DD, local). Editable. */
+  finishedOn?: string;
   updatedAt: string; // ISO
 }
 
@@ -68,6 +70,8 @@ export interface Settings {
   startDate: string; // YYYY-MM-DD, calendar date of Day 1
   flashcardUrl: string;
   flashcardLabel: string;
+  /** Study days per week you plan for. Used to estimate the finish date until there is enough history. */
+  studyDaysPerWeek?: number;
 }
 
 export interface AppData {

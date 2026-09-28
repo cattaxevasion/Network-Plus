@@ -32,6 +32,7 @@ type Action =
       status: Extract<DayStatus, 'completed' | 'partial' | 'skipped'>;
       reason?: Reason;
       note?: string;
+      date?: string;
     }
   | { type: 'reopenDay'; day: number }
   | { type: 'saveExam'; exam: PracticeExam; results: ObjectiveResult[] }
@@ -62,9 +63,16 @@ function reducer(state: AppData, action: Action): AppData {
     }
     case 'finishDay': {
       const prev = state.days[action.day];
-      const today = todayISO();
+      const date = action.date ?? todayISO();
       const worked = action.status !== 'skipped';
-      const hasSession = state.sessions.some((s) => s.day === action.day && s.date === today);
+      // Log the finish date as a study session. If the finish date was edited, move that session (earlier
+      // sessions of the same day, e.g. a partial attempt, are kept).
+      const oldDate = prev?.finishedOn;
+      const others =
+        oldDate && oldDate !== date
+          ? state.sessions.filter((s) => !(s.day === action.day && s.date === oldDate))
+          : state.sessions;
+      const hasSession = others.some((s) => s.day === action.day && s.date === date);
       return {
         ...state,
         days: {
@@ -75,10 +83,15 @@ function reducer(state: AppData, action: Action): AppData {
             status: action.status,
             reason: action.status === 'completed' ? undefined : action.reason,
             note: action.note?.trim() || undefined,
+            finishedOn: date,
             updatedAt: now(),
           },
         },
-        sessions: worked && !hasSession ? [...state.sessions, { id: newId(), date: today, day: action.day }] : state.sessions,
+        sessions: worked
+          ? hasSession
+            ? others
+            : [...others, { id: newId(), date, day: action.day }]
+          : others.filter((s) => !(s.day === action.day && s.date === date)),
       };
     }
     case 'reopenDay': {
@@ -92,6 +105,7 @@ function reducer(state: AppData, action: Action): AppData {
             ...prev,
             status: prev.stepsDone.length ? 'in_progress' : 'not_started',
             reason: undefined,
+            finishedOn: undefined,
             updatedAt: now(),
           },
         },
@@ -164,8 +178,8 @@ function makeActions(api: {
   const { dispatch, change } = api;
   return {
     toggleStep: (day: number, key: string) => change({ type: 'toggleStep', day, key }),
-    finishDay: (day: number, status: 'completed' | 'partial' | 'skipped', reason?: Reason, note?: string) =>
-      change({ type: 'finishDay', day, status, reason, note }),
+    finishDay: (day: number, status: 'completed' | 'partial' | 'skipped', reason?: Reason, note?: string, date?: string) =>
+      change({ type: 'finishDay', day, status, reason, note, date }),
     reopenDay: (day: number) => change({ type: 'reopenDay', day }),
     saveExam: (exam: PracticeExam, results: ObjectiveResult[]) => change({ type: 'saveExam', exam, results }),
     deleteExam: (id: string) => change({ type: 'deleteExam', id }),

@@ -3,7 +3,7 @@ import { PHASES, PLAN, type Phase } from '../data/plan';
 import { StatusChip } from '../components/ui';
 import { formatDate } from '../lib/dates';
 import { examForDay } from '../lib/exams';
-import { dayStatus, isFinal, summarize } from '../lib/progress';
+import { dayStatus, finishedDate, isFinal, summarize } from '../lib/progress';
 import { REASON_LABELS } from '../lib/types';
 import { useStore } from '../state/store';
 
@@ -85,7 +85,7 @@ export function PlanPage() {
                         </div>
                       )}
                     </div>
-                    {s !== 'not_started' && <StatusChip status={s} />}
+                    {s !== 'not_started' && <StatusChip status={s} date={finishedDate(data, p.day)} />}
                   </Link>
                 );
               })}

@@ -1,12 +1,14 @@
+import { formatDate } from '../lib/dates';
 import { useStore } from '../state/store';
 import { STATUS_LABELS, type DayStatus } from '../lib/types';
 import { LEVEL_LABELS, type Level } from '../lib/weakness';
 
-export function StatusChip({ status }: { status: DayStatus }) {
+export function StatusChip({ status, date }: { status: DayStatus; date?: string | null }) {
   return (
     <span className={`chip ${status}`}>
       <span className="dot" />
       {STATUS_LABELS[status]}
+      {date && <span className="chip-date">· {formatDate(date)}</span>}
     </span>
   );
 }

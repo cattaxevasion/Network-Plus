@@ -3,7 +3,7 @@
 // The calendar day is shown only as a reference; falling behind never blocks anything.
 
 import { PLAN, TOTAL_DAYS } from '../data/plan';
-import { addDays, diffDays, todayISO } from './dates';
+import { addDays, diffDays, toISODate, todayISO } from './dates';
 import { FINAL_STATUSES, type AppData, type DayStatus, type StudyDay } from './types';
 
 export function dayStatus(data: AppData, day: number): DayStatus {
@@ -71,4 +71,65 @@ export function unfinishedDays(data: AppData): StudyDay[] {
   return Object.values(data.days)
     .filter((d) => d.status === 'partial' || d.status === 'skipped')
     .sort((a, b) => b.day - a.day);
+}
+
+// ---------- Finish dates & pace ----------
+
+/** Date a day was finished: the recorded date, else its latest study session, else when it was last changed. */
+export function finishedDate(data: AppData, day: number): string | null {
+  const d = data.days[day];
+  if (!d || !isFinal(d.status)) return null;
+  if (d.finishedOn) return d.finishedOn;
+  const s = data.sessions
+    .filter((x) => x.day === day)
+    .map((x) => x.date)
+    .sort()
+    .pop();
+  return s ?? toISODate(new Date(d.updatedAt));
+}
+
+/**
+ * Finish-date estimate (app design, not from the Study Plan PDF).
+ *   actual  : plan days finished in the last 28 calendar days ÷ those days. Used once the plan has run for
+ *             14+ days and at least 3 days were finished in that window.
+ *   planned : Settings → study days per week (default 5) until then.
+ * Skipped days count as progress, because the plan moves on after them.
+ */
+export const PACE = { windowDays: 28, minHistoryDays: 14, minFinished: 3, defaultDaysPerWeek: 5 } as const;
+
+export interface FinishEstimate {
+  finish: string;
+  /** Plan days per week used for the estimate. */
+  perWeek: number;
+  source: 'actual' | 'planned';
+  windowDays: number;
+  remaining: number;
+  /** Where the original 60-day plan (one day per calendar day) would end. */
+  planEnd: string;
+}
+
+export function estimateFinish(data: AppData, today: string = todayISO()): FinishEstimate | null {
+  const finished = PLAN.filter((p) => isFinal(dayStatus(data, p.day))).length;
+  const remaining = TOTAL_DAYS - finished;
+  if (remaining === 0) return null;
+  const since = Math.max(1, diffDays(data.settings.startDate, today) + 1);
+  const windowDays = Math.min(PACE.windowDays, since);
+  const from = addDays(today, -(windowDays - 1));
+  const inWindow = PLAN.filter((p) => {
+    const d = finishedDate(data, p.day);
+    return d !== null && d >= from && d <= today;
+  }).length;
+
+  const actual = since >= PACE.minHistoryDays && inWindow >= PACE.minFinished;
+  const perDay = actual ? inWindow / windowDays : (data.settings.studyDaysPerWeek ?? PACE.defaultDaysPerWeek) / 7;
+  // Not started yet (start date in the future): count from the start date.
+  const base = today < data.settings.startDate ? data.settings.startDate : today;
+  return {
+    finish: addDays(base, Math.ceil(remaining / perDay) - 1),
+    perWeek: Math.round(perDay * 7 * 10) / 10,
+    source: actual ? 'actual' : 'planned',
+    windowDays,
+    remaining,
+    planEnd: addDays(data.settings.startDate, TOTAL_DAYS - 1),
+  };
 }

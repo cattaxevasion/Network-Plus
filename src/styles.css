@@ -1449,3 +1449,53 @@ mark {
   flex: 1;
   min-width: 0;
 }
+
+/* ---------- Progress stats ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+.stat-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 750;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+.stat-of {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.stat-sub {
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+@media (max-width: 760px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .stats .stat:last-child {
+    grid-column: 1 / -1;
+  }
+}
+.chip-date {
+  font-weight: 500;
+  opacity: 0.85;
+}
+.date-field input {
+  max-width: 220px;
+}

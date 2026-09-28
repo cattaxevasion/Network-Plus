@@ -6,7 +6,7 @@ import { ScoreChart } from '../components/ScoreChart';
 import { formatDate } from '../lib/dates';
 import { stepsFor } from '../lib/daySteps';
 import { examForDay } from '../lib/exams';
-import { dayStatus, summarize, unfinishedDays } from '../lib/progress';
+import { dayStatus, estimateFinish, finishedDate, summarize, unfinishedDays } from '../lib/progress';
 import { UNIT_BY_ID, UNIT_NOUN_PLURAL } from '../lib/tracking';
 import { REASON_LABELS } from '../lib/types';
 import { objectiveStats, rankByWeakness } from '../lib/weakness';
@@ -15,6 +15,7 @@ import { useStore } from '../state/store';
 export function Dashboard() {
   const { data } = useStore();
   const sum = summarize(data);
+  const est = estimateFinish(data);
   const cur = sum.current;
   const plan = cur ? getPlanDay(cur)! : null;
   const steps = cur ? stepsFor(cur) : [];
@@ -81,22 +82,41 @@ export function Dashboard() {
           <h2 id="progress-title">60-day plan</h2>
           <Link to="/plan">Full plan</Link>
         </div>
-        <p className="muted" style={{ marginBottom: 14 }}>
-          <b className="num">{sum.finished}</b> of {TOTAL_DAYS} days done
-          {sum.partial + sum.skipped > 0 && (
-            <span className="faint">
-              {' '}
-              ({sum.completed} completed, {sum.partial} partial, {sum.skipped} skipped)
-            </span>
-          )}
-          {cur && sum.offset > 0 && (
+        <div className="stats">
+          <div className="stat">
+            <div className="stat-label">Done</div>
+            <div className="stat-value num">
+              {sum.finished}
+              <span className="stat-of"> / {TOTAL_DAYS}</span>
+            </div>
+            {sum.partial + sum.skipped > 0 && (
+              <div className="stat-sub">
+                {sum.completed} completed · {sum.partial} partial · {sum.skipped} skipped
+              </div>
+            )}
+          </div>
+          {est && (
             <>
-              {' '}
-              · Calendar day {sum.calendar}. The plan moves with you — at one day per day you finish around{' '}
-              {formatDate(sum.projectedFinish)}.
+              <div className="stat">
+                <div className="stat-label">Pace</div>
+                <div className="stat-value num">
+                  {est.perWeek}
+                  <span className="stat-of"> days/week</span>
+                </div>
+                <div className="stat-sub">
+                  {est.source === 'actual' ? `your last ${est.windowDays} days` : 'your plan (Settings)'}
+                </div>
+              </div>
+              <div className="stat">
+                <div className="stat-label">Estimated finish</div>
+                <div className="stat-value">{formatDate(est.finish, { month: 'short', day: 'numeric' })}</div>
+                <div className="stat-sub">
+                  {est.remaining} days left · 60-day plan: {formatDate(est.planEnd)}
+                </div>
+              </div>
             </>
           )}
-        </p>
+        </div>
         <ProgressStrip data={data} current={cur} calendar={sum.calendar} />
       </section>
 
@@ -167,7 +187,7 @@ export function Dashboard() {
                         </div>
                         <div className="sub">{d.reason ? REASON_LABELS[d.reason] : 'No reason noted'}</div>
                       </div>
-                      <StatusChip status={d.status} />
+                      <StatusChip status={d.status} date={finishedDate(data, d.day)} />
                     </Link>
                   ))}
                 </div>

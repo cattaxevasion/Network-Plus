@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ImportButton } from '../components/ImportButton';
 import { TOTAL_DAYS } from '../data/plan';
 import { addDays, formatDate, todayISO } from '../lib/dates';
+import { PACE } from '../lib/progress';
 import { useStore } from '../state/store';
 
 /** First run (or after a reset): pick a start date and flashcard link, or look around with sample data. */
@@ -10,10 +11,11 @@ export function SetupPage() {
   const [startDate, setStartDate] = useState(todayISO());
   const [flashcardLabel, setFlashcardLabel] = useState('');
   const [flashcardUrl, setFlashcardUrl] = useState('');
+  const [perWeek, setPerWeek] = useState<number>(PACE.defaultDaysPerWeek);
 
   const urlOk = !flashcardUrl || /^https?:\/\//i.test(flashcardUrl.trim());
   const canStart = !!startDate && urlOk;
-  const finish = startDate ? addDays(startDate, TOTAL_DAYS - 1) : null;
+  const finish = startDate ? addDays(startDate, Math.ceil(TOTAL_DAYS / (perWeek / 7)) - 1) : null;
 
   // Always land on Today after leaving the setup screen.
   const home = () => {
@@ -27,6 +29,7 @@ export function SetupPage() {
       startDate,
       flashcardLabel: flashcardLabel.trim() || 'Flashcards',
       flashcardUrl: flashcardUrl.trim(),
+      studyDaysPerWeek: perWeek,
     });
   };
 
@@ -52,10 +55,21 @@ export function SetupPage() {
           <label className="field">
             When do you start Day 1?
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          </label>
+
+          <label className="field">
+            How many days a week can you study?
+            <select value={perWeek} onChange={(e) => setPerWeek(Number(e.target.value))}>
+              {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+                <option key={n} value={n}>
+                  {n} {n === 1 ? 'day' : 'days'} a week
+                </option>
+              ))}
+            </select>
             {finish && (
               <span className="hint">
-                At one plan day per calendar day, you'd finish on {formatDate(finish, { month: 'long', day: 'numeric' })}. Falling
-                behind is fine; the plan moves with you.
+                At that pace you'd finish around {formatDate(finish, { month: 'long', day: 'numeric' })}. Once you have 2 weeks of
+                history, the estimate follows your actual pace. Falling behind is fine; the plan moves with you.
               </span>
             )}
           </label>

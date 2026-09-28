@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ImportButton } from '../components/ImportButton';
-import { todayISO } from '../lib/dates';
+import { formatDate, todayISO } from '../lib/dates';
+import { PACE, estimateFinish } from '../lib/progress';
 import { downloadBackup } from '../state/storage';
 import { useStore } from '../state/store';
 
@@ -12,6 +13,7 @@ export function SettingsPage() {
   useEffect(() => setUrl(s.flashcardUrl), [s.flashcardUrl]);
   const urlOk = !url || /^https?:\/\//i.test(url.trim());
   const demo = mode === 'demo';
+  const est = estimateFinish(data);
 
   return (
     <div className="page" style={{ maxWidth: 640 }}>
@@ -43,6 +45,29 @@ export function SettingsPage() {
             onChange={(e) => e.target.value && actions.updateSettings({ startDate: e.target.value })}
           />
         </label>
+        <label className="field">
+          Study days per week
+          <span className="hint">
+            Used to estimate your finish date until there are 2 weeks of history. After that, your actual pace over the last 4
+            weeks is used.
+          </span>
+          <select
+            value={s.studyDaysPerWeek ?? PACE.defaultDaysPerWeek}
+            onChange={(e) => actions.updateSettings({ studyDaysPerWeek: Number(e.target.value) })}
+          >
+            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+              <option key={n} value={n}>
+                {n} {n === 1 ? 'day' : 'days'} a week
+              </option>
+            ))}
+          </select>
+        </label>
+        {est && (
+          <p className="faint">
+            Estimated finish: <b>{formatDate(est.finish, { month: 'long', day: 'numeric' })}</b> ({est.perWeek} days/week,{' '}
+            {est.source === 'actual' ? `your pace over the last ${est.windowDays} days` : 'from this setting'}).
+          </p>
+        )}
       </section>
 
       <section className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

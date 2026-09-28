@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PHASES, PLAN, type Phase } from '../data/plan';
-import { dayStatus } from '../lib/progress';
+import { formatDate } from '../lib/dates';
+import { dayStatus, finishedDate } from '../lib/progress';
 import { STATUS_LABELS, type AppData } from '../lib/types';
 
 /** 60 cells grouped by the PDF's three phases. Tapping a cell opens that day. */
@@ -25,7 +26,7 @@ export function ProgressStrip({ data, current, calendar }: { data: AppData; curr
                       key={p.day}
                       to={`/day/${p.day}`}
                       className={cls}
-                      title={`Day ${p.day}: ${p.sourceText.join(', ')} — ${STATUS_LABELS[s]}`}
+                      title={`Day ${p.day}: ${p.sourceText.join(', ')} — ${STATUS_LABELS[s]}${finishedDate(data, p.day) ? ` (${formatDate(finishedDate(data, p.day)!)})` : ''}`}
                       aria-label={`Day ${p.day}, ${STATUS_LABELS[s]}`}
                     />
                   );

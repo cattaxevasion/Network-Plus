@@ -3,10 +3,10 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { PHASES, TOTAL_DAYS, getPlanDay } from '../data/plan';
 import { GUIDES } from '../data/steps';
 import { Check, FlashcardLink, StatusChip } from '../components/ui';
-import { formatDate } from '../lib/dates';
+import { formatDate, todayISO } from '../lib/dates';
 import { stepsFor } from '../lib/daySteps';
 import { examForDay } from '../lib/exams';
-import { currentDay, dayStatus, isFinal } from '../lib/progress';
+import { currentDay, dayStatus, finishedDate, isFinal } from '../lib/progress';
 import { REASON_LABELS, STATUS_LABELS, type Reason } from '../lib/types';
 import { useStore } from '../state/store';
 
@@ -29,6 +29,7 @@ export function DayPage() {
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [reason, setReason] = useState<Reason | undefined>();
   const [note, setNote] = useState('');
+  const [date, setDate] = useState(todayISO());
   const [editing, setEditing] = useState(false);
 
   // Reset the form when navigating between days.
@@ -36,6 +37,7 @@ export function DayPage() {
     setOutcome(null);
     setReason(undefined);
     setNote('');
+    setDate(todayISO());
     setEditing(false);
   }, [day]);
 
@@ -50,7 +52,7 @@ export function DayPage() {
 
   const save = () => {
     if (!outcome) return;
-    actions.finishDay(day, outcome, outcome === 'completed' ? undefined : reason, note);
+    actions.finishDay(day, outcome, outcome === 'completed' ? undefined : reason, note, date || todayISO());
     setEditing(false);
     setOutcome(null);
   };
@@ -59,6 +61,7 @@ export function DayPage() {
     setOutcome((rec?.status as Outcome) ?? null);
     setReason(rec?.reason);
     setNote(rec?.note ?? '');
+    setDate(finishedDate(data, day) ?? todayISO());
     setEditing(true);
   };
 
@@ -73,7 +76,7 @@ export function DayPage() {
           <h1>Day {day}</h1>
         </div>
         <div className="day-nav">
-          <StatusChip status={status} />
+          <StatusChip status={status} date={finishedDate(data, day)} />
           <Link
             className={`btn small ${day <= 1 ? 'disabled' : ''}`}
             to={`/day/${Math.max(1, day - 1)}`}
@@ -147,7 +150,10 @@ export function DayPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div className="card-head" style={{ marginBottom: 0 }}>
               <h2 id="wrap-title">Marked {STATUS_LABELS[status].toLowerCase()}</h2>
-              <span className="faint">{rec && formatDate(rec.updatedAt.slice(0, 10))}</span>
+              <span className="faint">
+                {finishedDate(data, day) &&
+                  formatDate(finishedDate(data, day)!, { weekday: 'short', month: 'short', day: 'numeric' })}
+              </span>
             </div>
             {rec?.reason && (
               <p>
@@ -212,6 +218,14 @@ export function DayPage() {
                   If it isn't, let it go.
                 </p>
               </>
+            )}
+
+            {outcome && (
+              <label className="field date-field">
+                Date
+                <span className="hint">Filling this in later? Pick the day you actually studied.</span>
+                <input type="date" value={date} max={todayISO()} onChange={(e) => setDate(e.target.value)} />
+              </label>
             )}
 
             {outcome && (

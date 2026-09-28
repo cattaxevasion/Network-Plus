@@ -105,6 +105,7 @@ export function validateAppData(json: unknown): AppData {
       stepsDone: Array.isArray(v.stepsDone) ? v.stepsDone.filter((x): x is string => typeof x === 'string') : [],
       reason: REASONS.includes(reason) ? reason : undefined,
       note: optStr(v.note),
+      finishedOn: DATE.test(str(v.finishedOn)) ? str(v.finishedOn) : undefined,
       updatedAt: str(v.updatedAt, new Date().toISOString()),
     };
   }
@@ -134,6 +135,12 @@ export function validateAppData(json: unknown): AppData {
       startDate: str(json.settings.startDate),
       flashcardUrl: str(json.settings.flashcardUrl),
       flashcardLabel: str(json.settings.flashcardLabel, 'Flashcards'),
+      studyDaysPerWeek:
+        typeof json.settings.studyDaysPerWeek === 'number' &&
+        json.settings.studyDaysPerWeek >= 1 &&
+        json.settings.studyDaysPerWeek <= 7
+          ? Math.round(json.settings.studyDaysPerWeek)
+          : undefined,
     },
     days,
     sessions: json.sessions.filter(isObj).flatMap((s) =>

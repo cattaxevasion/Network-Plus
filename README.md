@@ -25,8 +25,8 @@ npm run build    # type-check + production build into dist/
 | 1–3 Requirements, screens, data model | Done |
 | 4 UI prototype | Done |
 | 5 MVP | **Done: saved in this browser (localStorage), first-run setup, sample-data mode, backup export/import, reset** |
-| 6 Persistence | **Code done: Supabase sync + GitHub sign-in + RLS. Needs your Supabase project (below)** |
-| 7 Polish | GitHub Pages deploy, loading/error states |
+| 6 Persistence | Done: Supabase sync + GitHub sign-in + RLS |
+| 7 Polish | Deployed to GitHub Pages; ongoing tweaks (finish dates, pace-based estimate) |
 
 ## Where things are
 
@@ -57,6 +57,17 @@ src/
   pages/            Dashboard, Plan, Day, Exams, Exam form, Weak Areas, Settings
 ```
 
+## Deploy (GitHub Pages)
+
+No Node.js needed on your PC: GitHub builds the site.
+
+1. Put this folder in a **public** GitHub repo (e.g. with GitHub Desktop). `node_modules`, `dist` and `Claude outputs` are ignored.
+2. Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. Push to `main`. The **Actions** tab shows the "Deploy to GitHub Pages" run; when it's green the site is at
+   `https://<username>.github.io/<repo>/`.
+4. Use that URL in the GitHub OAuth app (Homepage URL) and in Supabase → Authentication → URL Configuration
+   (Site URL + Redirect URLs, with the trailing `/`).
+
 ## Your data
 
 - **Cloud sync off** (`src/config/supabase.ts` empty): saved in this browser's localStorage only.
@@ -73,17 +84,16 @@ All free. Dashboard menu names may differ slightly over time.
 1. **Supabase project**: sign up at supabase.com → New project (region: Northeast Asia (Tokyo) is closest to Japan).
 2. **Table + security**: SQL Editor → New query → paste `supabase/schema.sql` → Run.
 3. **GitHub OAuth app**: GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
-   - Homepage URL: `http://localhost:5173` (change to the GitHub Pages URL later)
+   - Homepage URL: the GitHub Pages URL (`https://cattaxevasion.github.io/Network-Plus/`)
    - Authorization callback URL: copy it from Supabase → Authentication → Sign In / Providers → GitHub
      (looks like `https://<project-ref>.supabase.co/auth/v1/callback`)
    - Register, then copy the Client ID and generate a Client secret.
 4. **Enable GitHub in Supabase**: Authentication → Sign In / Providers → GitHub → enable, paste Client ID + secret → Save.
 5. **Allowed redirect URLs**: Authentication → URL Configuration
-   - Site URL: `http://localhost:5173/`
-   - Redirect URLs: add `http://localhost:5173/` (and later `https://<user>.github.io/<repo>/`)
+   - Site URL and Redirect URLs: `https://cattaxevasion.github.io/Network-Plus/` (exact case, trailing `/`)
 6. **Keys**: Project Settings → API: copy the Project URL and the anon (or publishable) key into `src/config/supabase.ts`.
    Never use the `service_role` / secret key in the app.
-7. `npm run dev` → **Sign in with GitHub** once. This creates your account.
+7. Open the site → **Sign in with GitHub** once. This creates your account.
 8. **Lock it down**: Authentication → Sign In / Providers → turn off **Allow new users to sign up**.
    From now on only your account can sign in.
 9. Check: Table Editor → `app_data` has one row (yours), and RLS is shown as enabled.
@@ -117,3 +127,7 @@ so the input method can be replaced without touching other screens.
   accuracy in the last 3 exams the item appeared in: < 70% Weak, < 85% Moderate, otherwise Strong;
   fewer than 3 questions = Not enough data.
 - Retake suggestion order: exams retaken fewer times first, then lowest first-attempt score. You still choose.
+- Finish dates: each finished day stores the date you pick when marking it (default today).
+- Estimated finish (`src/lib/progress.ts`, `PACE`): plan days finished in the last 28 days ÷ 28 once the plan has run
+  14+ days with 3+ finished days in that window; before that, Settings → study days per week (default 5).
+  Skipped days count as progress because the plan moves on.
