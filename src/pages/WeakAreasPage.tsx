@@ -162,9 +162,14 @@ function StatRow({ s }: { s: ObjectiveStat }) {
         <div className="t">
           {o.short}
           {TRACK_BY === 'objective' && (
-            <Link className="topics-link" to={`/glossary?tab=objectives&obj=${o.id}`}>
-              Topics
-            </Link>
+            <>
+              <Link className="topics-link" to={`/glossary?tab=objectives&obj=${o.id}`}>
+                Topics
+              </Link>
+              <Link className="topics-link" to={`/cards/study?deck=all&obj=${o.id}&size=0&known=1`}>
+                Cards
+              </Link>
+            </>
           )}
         </div>
         <div className="why">{s.reasons.join(' · ')}</div>

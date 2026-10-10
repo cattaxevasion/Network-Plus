@@ -16,10 +16,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from 'react';
 import { buildSample, emptyData } from '../data/sample';
 import { newId, todayISO } from '../lib/dates';
-import type { AppData, DayStatus, ObjectiveResult, PracticeExam, Reason, Settings } from '../lib/types';
+import type { AppData, DayStatus, Flashcard, ObjectiveResult, PracticeExam, Reason, Settings, Stack } from '../lib/types';
 import { auth, type AppUser } from './auth';
 import { localBackend, type Backend } from './backend';
-import { archiveLocalData, localStorageBackend } from './storage';
+import { archiveLocalData, localStorageBackend, type PackCard } from './storage';
 
 export type Mode = 'loading' | 'signin' | 'error' | 'setup' | 'live' | 'demo';
 export type SyncStatus = 'idle' | 'saving' | 'saved' | 'offline' | 'conflict' | 'error';
@@ -39,6 +39,10 @@ type Action =
   | { type: 'deleteExam'; id: string }
   | { type: 'setReviewed'; id: string; reviewed: boolean }
   | { type: 'updateSettings'; settings: Partial<Settings> }
+  | { type: 'saveCard'; card: Flashcard }
+  | { type: 'deleteCard'; id: string }
+  | { type: 'importPack'; cards: PackCard[]; date: string }
+  | { type: 'rateCard'; id: string; stack: Stack; date: string }
   | { type: 'replaceAll'; data: AppData };
 
 const now = () => new Date().toISOString();
@@ -130,6 +134,44 @@ function reducer(state: AppData, action: Action): AppData {
       };
     case 'setReviewed':
       return { ...state, exams: state.exams.map((e) => (e.id === action.id ? { ...e, reviewed: action.reviewed } : e)) };
+    case 'saveCard': {
+      const exists = state.cards.some((c) => c.id === action.card.id);
+      return {
+        ...state,
+        cards: exists ? state.cards.map((c) => (c.id === action.card.id ? action.card : c)) : [...state.cards, action.card],
+      };
+    }
+    case 'importPack': {
+      // Merge by id: re-importing a newer pack updates text but keeps each card's stack.
+      const byId = new Map(state.cards.map((c) => [c.id, c]));
+      for (const p of action.cards) {
+        const prev = byId.get(p.id);
+        byId.set(p.id, {
+          id: p.id,
+          front: p.front,
+          back: p.back,
+          objectiveId: p.objectiveId,
+          day: p.day,
+          source: 'guide',
+          createdOn: prev?.createdOn ?? action.date,
+        });
+      }
+      return { ...state, cards: [...byId.values()] };
+    }
+    case 'deleteCard': {
+      const { [action.id]: _removed, ...rest } = state.cardStates;
+      return { ...state, cards: state.cards.filter((c) => c.id !== action.id), cardStates: rest };
+    }
+    case 'rateCard': {
+      const prev = state.cardStates[action.id];
+      return {
+        ...state,
+        cardStates: {
+          ...state.cardStates,
+          [action.id]: { stack: action.stack, lastReviewed: action.date, reviews: (prev?.reviews ?? 0) + 1 },
+        },
+      };
+    }
     case 'updateSettings':
       return { ...state, settings: { ...state.settings, ...action.settings } };
     case 'replaceAll':
@@ -185,6 +227,10 @@ function makeActions(api: {
     deleteExam: (id: string) => change({ type: 'deleteExam', id }),
     setReviewed: (id: string, reviewed: boolean) => change({ type: 'setReviewed', id, reviewed }),
     updateSettings: (settings: Partial<Settings>) => change({ type: 'updateSettings', settings }),
+    saveCard: (card: Flashcard) => change({ type: 'saveCard', card }),
+    deleteCard: (id: string) => change({ type: 'deleteCard', id }),
+    importPack: (cards: PackCard[]) => change({ type: 'importPack', cards, date: todayISO() }),
+    rateCard: (id: string, stack: Stack) => change({ type: 'rateCard', id, stack, date: todayISO() }),
 
     /** First run: create an empty plan with these settings and start saving. */
     startPlan: (settings: Settings) => api.replaceAndSave({ ...emptyData(), settings }, 'live'),

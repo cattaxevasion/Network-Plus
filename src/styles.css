@@ -1499,3 +1499,337 @@ mark {
 .date-field input {
   max-width: 220px;
 }
+
+/* ---------- Flashcards ---------- */
+.nav a.desktop-only {
+}
+@media (max-width: 760px) {
+  .nav a.desktop-only {
+    display: none;
+  }
+}
+.stackbar {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--empty);
+}
+.stackbar .seg {
+  display: block;
+  height: 100%;
+}
+.seg.looked,
+.sw.looked {
+  background: var(--bad);
+}
+.seg.while,
+.sw.while {
+  background: #ec835a;
+}
+.seg.new,
+.sw.new {
+  background: var(--empty);
+}
+.seg.moment,
+.sw.moment {
+  background: var(--warn);
+}
+.seg.knew,
+.sw.knew {
+  background: var(--good);
+}
+.sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sw.new {
+  outline: 1px solid var(--neutral);
+  outline-offset: -1px;
+}
+.stack-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 10px;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+.stack-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.study-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.inline-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.inline-field select {
+  width: auto;
+}
+.study-now .app-note {
+  margin-top: 12px;
+}
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 760px) {
+  .deck-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.card-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: end;
+}
+.card-form .field:nth-child(3),
+.card-form .btn-row {
+  grid-column: 1 / -1;
+}
+@media (max-width: 760px) {
+  .card-form {
+    grid-template-columns: 1fr;
+  }
+}
+.card-form textarea {
+  min-height: 60px;
+}
+.mycard-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  flex-wrap: wrap;
+}
+.mycard-row:last-child {
+  border-bottom: 0;
+}
+.mycard-row .grow {
+  flex: 1;
+  min-width: 200px;
+}
+.mc-front {
+  font-weight: 600;
+}
+.mc-back {
+  color: var(--text-2);
+  font-size: 0.9375rem;
+}
+.mc-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chip.bucket.looked {
+  background: var(--bad-soft);
+  color: var(--bad-ink);
+}
+.chip.bucket.while {
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+}
+.chip.bucket.moment {
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+}
+.chip.bucket.knew {
+  background: var(--good-soft);
+  color: var(--good-ink);
+}
+
+.page.study {
+  max-width: 640px;
+}
+.study-progress {
+  height: 4px;
+  background: var(--empty);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.study-progress i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s;
+}
+.flashcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 280px;
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  text-align: center;
+}
+.flashcard:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.fc-meta {
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  font-weight: 600;
+}
+.fc-prompt {
+  font-size: 0.875rem;
+  color: var(--accent-ink);
+  font-weight: 650;
+}
+.fc-front {
+  font-size: 1.75rem;
+  font-weight: 750;
+  line-height: 1.25;
+  word-break: break-word;
+}
+.fc-back {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  padding-top: 14px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  word-break: break-word;
+}
+.fc-hint {
+  font-size: 0.875rem;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+.ratings {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (max-width: 760px) {
+  .ratings {
+    grid-template-columns: 1fr 1fr;
+  }
+  .fc-front {
+    font-size: 1.5rem;
+  }
+}
+.rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px;
+  min-height: 72px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-left-width: 5px;
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+.rating:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.rating .key {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  font-weight: 700;
+}
+.rating.knew {
+  border-left-color: var(--good);
+}
+.rating.moment {
+  border-left-color: var(--warn);
+}
+.rating.while {
+  border-left-color: #ec835a;
+}
+.rating.looked {
+  border-left-color: var(--bad);
+}
+.rating:not(:disabled):hover {
+  background: var(--surface-2);
+}
+.tally {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+.tally-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- Study guide box (Day page) ---------- */
+.guide-box {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.guide-box .label {
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.guide-box .btn {
+  align-self: flex-start;
+}
+.guide-head {
+  font-size: 0.9375rem;
+}
+.guide-topics {
+  margin: 6px 0 0;
+  padding-left: 20px;
+  color: var(--text-2);
+  font-size: 0.9375rem;
+  columns: 2;
+  column-gap: 24px;
+}
+.guide-topics li {
+  break-inside: avoid;
+  margin: 2px 0;
+}
+@media (max-width: 760px) {
+  .guide-topics {
+    columns: 1;
+  }
+}
+.deck-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}

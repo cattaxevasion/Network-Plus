@@ -3,7 +3,7 @@
 A small personal dashboard for following the Dion Training **CompTIA Network+ (N10-009) 60-Day Study Plan**:
 daily study → practice exams → objective tracking → weak areas → retakes.
 
-Flashcards stay in your own app (Anki, Quizlet, …). This app only links to it.
+Flashcards are built in (official acronyms and ports, your own cards, study-guide card packs).
 
 ## Run locally
 
@@ -20,13 +20,13 @@ npm run build    # type-check + production build into dist/
 
 ## Status
 
-| Phase | State |
-|---|---|
-| 1–3 Requirements, screens, data model | Done |
-| 4 UI prototype | Done |
-| 5 MVP | **Done: saved in this browser (localStorage), first-run setup, sample-data mode, backup export/import, reset** |
-| 6 Persistence | Done: Supabase sync + GitHub sign-in + RLS |
-| 7 Polish | Deployed to GitHub Pages; ongoing tweaks (finish dates, pace-based estimate) |
+| Phase                                 | State                                                                                                          |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 1–3 Requirements, screens, data model | Done                                                                                                           |
+| 4 UI prototype                        | Done                                                                                                           |
+| 5 MVP                                 | **Done: saved in this browser (localStorage), first-run setup, sample-data mode, backup export/import, reset** |
+| 6 Persistence                         | Done: Supabase sync + GitHub sign-in + RLS                                                                     |
+| 7 Polish                              | Deployed to GitHub Pages; ongoing tweaks (finish dates, pace-based estimate)                                   |
 
 ## Where things are
 
@@ -100,6 +100,28 @@ All free. Dashboard menu names may differ slightly over time.
 
 Why this is safe to host publicly: the anon key is designed to be public. The table allows access only to a signed-in
 user's own row (`auth.uid() = user_id`), anonymous access is revoked, and sign-ups are closed.
+
+## Flashcards
+
+The Flashcards tab (`src/pages/CardsPage.tsx`, `StudyPage.tsx`, logic in `src/lib/cards.ts`):
+
+- Decks: the official acronyms (162) and ports (20) from the Glossary, plus cards you make.
+- Method from the Study Plan (p.7–8): after flipping a card, put it in one of four stacks by how long the answer took
+  (Knew it right away / Had to think for a moment / Had to think for a while / Had to look at the answer).
+  The goal is to get every card into "Knew it right away". No dates or intervals.
+- Order in a round (app design): Had to look → Had to think a while → New → Had to think a moment.
+  "Knew it right away" cards only when you choose to review them.
+- "Previous day's cards" (Study Plan p.4) = the cards you made on the last day before today that you made any,
+  plus the study-guide cards of the plan day you finished last.
+- Day steps link here: "Create flashcards" opens the card form, "Review the previous day's flashcards" starts that deck.
+
+### Study guide cards
+
+- `src/data/studyGuide.ts` maps each plan day (1–33) to its Study Guide pages, section and topics. The Day page shows them.
+- Cards made from the Study Guide are **not in this repo** (the guide is Dion Training's material). They are imported
+  privately into your account: Flashcards → Study guide → **Import card pack** (a `.json` file with
+  `kind: "netplus-card-pack"`). Re-importing the same pack updates the text and keeps your stacks.
+- A day's guide cards appear once you reach that plan day (the first unfinished day).
 
 ## Glossary
 

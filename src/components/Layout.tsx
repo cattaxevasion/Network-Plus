@@ -18,9 +18,15 @@ const icon = (d: string) => (
 const NAV = [
   { to: '/', label: 'Today', icon: icon('M3 11.5 12 4l9 7.5M5.5 9.5V20h13V9.5'), end: true },
   { to: '/plan', label: 'Plan', icon: icon('M4 5h16M4 12h16M4 19h16M8 3v4M16 3v4') },
+  { to: '/cards', label: 'Flashcards', short: 'Cards', icon: icon('M7 7h12v13H7zM4 4h12v3M4 4v13h3') },
   { to: '/exams', label: 'Exams', icon: icon('M7 3h10v18H7zM10 8h4M10 12h4M10 16h2') },
   { to: '/weak', label: 'Weak Areas', short: 'Weak', icon: icon('M4 20V10M10 20V4M16 20v-7M22 20H2') },
-  { to: '/glossary', label: 'Glossary', icon: icon('M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4ZM5 17a3 3 0 0 1 3-3h10M9 8h5') },
+  {
+    to: '/glossary',
+    label: 'Glossary',
+    desktopOnly: true,
+    icon: icon('M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4ZM5 17a3 3 0 0 1 3-3h10M9 8h5'),
+  },
   {
     to: '/settings',
     label: 'Settings',
@@ -42,7 +48,12 @@ export function Layout() {
         </div>
         <nav className="nav" aria-label="Main">
           {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink
+              key={n.to}
+              to={n.to}
+              end={n.end}
+              className={({ isActive }) => [isActive ? 'active' : '', 'desktopOnly' in n ? 'desktop-only' : ''].join(' ')}
+            >
               {n.icon}
               <span className="long">{n.label}</span>
               <span className="short">{'short' in n ? n.short : n.label}</span>

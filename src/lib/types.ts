@@ -74,6 +74,36 @@ export interface Settings {
   studyDaysPerWeek?: number;
 }
 
+/** The four stacks from the Study Plan PDF (p.8), by how long it took to think of the answer. */
+export type Stack = 'knew' | 'moment' | 'while' | 'looked';
+
+export const STACK_LABELS: Record<Stack, string> = {
+  knew: 'Knew it right away',
+  moment: 'Had to think for a moment',
+  while: 'Had to think for a while',
+  looked: 'Had to look at the answer',
+};
+
+/** A card you made yourself. Official cards (acronyms, ports) come from src/data/glossary.ts and are not stored. */
+export interface Flashcard {
+  id: string;
+  front: string;
+  back: string;
+  objectiveId?: string;
+  createdOn: string; // YYYY-MM-DD (local)
+  /** 'guide' = imported from a study-guide card pack (private to your account). Absent = made by you. */
+  source?: 'guide';
+  /** Plan day the card belongs to (guide cards). It shows up once you reach that day. */
+  day?: number;
+}
+
+/** Where a card currently sits. Key: card id (custom id, "acr:DNS", "port:Secure Shell (SSH)"). */
+export interface CardState {
+  stack: Stack;
+  lastReviewed: string; // YYYY-MM-DD
+  reviews: number;
+}
+
 export interface AppData {
   version: 1;
   settings: Settings;
@@ -81,6 +111,8 @@ export interface AppData {
   sessions: StudySession[];
   exams: PracticeExam[];
   objectiveResults: ObjectiveResult[];
+  cards: Flashcard[];
+  cardStates: Record<string, CardState>;
 }
 
 export const FINAL_STATUSES: DayStatus[] = ['completed', 'partial', 'skipped'];

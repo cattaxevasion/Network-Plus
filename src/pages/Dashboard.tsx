@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PHASES, TOTAL_DAYS, getPlanDay } from '../data/plan';
-import { FlashcardLink, LevelChip, StatusChip } from '../components/ui';
+import { LevelChip, StatusChip } from '../components/ui';
 import { ProgressStrip } from '../components/ProgressStrip';
 import { ScoreChart } from '../components/ScoreChart';
 import { formatDate } from '../lib/dates';
@@ -63,7 +63,9 @@ export function Dashboard() {
                 Record exam result
               </Link>
             )}
-            <FlashcardLink />
+            <Link className="btn" to="/cards">
+              Flashcards
+            </Link>
           </div>
         </section>
       ) : (

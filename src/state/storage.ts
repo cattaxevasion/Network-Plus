@@ -2,7 +2,7 @@
 // Used directly when cloud sync is not configured (src/config/supabase.ts), and as the source for the
 // one-time move of existing browser data into the cloud on first sign-in.
 
-import type { AppData, DayStatus, ExamKind, Reason } from '../lib/types';
+import type { AppData, CardState, DayStatus, ExamKind, Reason, Stack } from '../lib/types';
 
 export interface DataStorage {
   /** Saved data, or null when nothing has been saved yet (first run). Throws if saved data is unreadable. */
@@ -65,6 +65,7 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const STATUSES: DayStatus[] = ['not_started', 'in_progress', 'completed', 'partial', 'skipped'];
 const REASONS: Reason[] = ['no_time', 'lost_focus', 'difficult_topic', 'unexpected_event', 'other'];
 const KINDS: ExamKind[] = ['first', 'retake'];
+const STACKS: Stack[] = ['knew', 'moment', 'while', 'looked'];
 
 type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -128,6 +129,7 @@ export function validateAppData(json: unknown): AppData {
     ];
   });
   const examIds = new Set(exams.map((e) => e.id));
+  const fallbackDate = str((json.settings as Record<string, unknown>).startDate);
 
   return {
     version: 1,
@@ -169,6 +171,38 @@ export function validateAppData(json: unknown): AppData {
           ]
         : [],
     ),
+    // Added later: older backups have no cards yet.
+    cards: (Array.isArray(json.cards) ? json.cards : []).filter(isObj).flatMap((c) =>
+      str(c.id) && str(c.front).trim() && str(c.back).trim()
+        ? [
+            {
+              id: str(c.id),
+              front: str(c.front),
+              back: str(c.back),
+              objectiveId: optStr(c.objectiveId),
+              createdOn: DATE.test(str(c.createdOn)) ? str(c.createdOn) : fallbackDate,
+              source: c.source === 'guide' ? ('guide' as const) : undefined,
+              day: typeof c.day === 'number' && c.day >= 1 && c.day <= 60 ? Math.round(c.day) : undefined,
+            },
+          ]
+        : [],
+    ),
+    cardStates: Object.fromEntries(
+      Object.entries(isObj(json.cardStates) ? json.cardStates : {}).flatMap(([k, v]): Array<[string, CardState]> =>
+        isObj(v) && STACKS.includes(str(v.stack) as Stack)
+          ? [
+              [
+                k,
+                {
+                  stack: str(v.stack) as Stack,
+                  lastReviewed: DATE.test(str(v.lastReviewed)) ? str(v.lastReviewed) : fallbackDate,
+                  reviews: Math.max(0, num(v.reviews)),
+                },
+              ],
+            ]
+          : [],
+      ),
+    ),
   };
 }
 
@@ -183,4 +217,42 @@ export function downloadBackup(data: AppData, today: string) {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ---------- Card packs (study-guide cards, imported into your account; never part of the repo) ----------
+
+export interface PackCard {
+  id: string;
+  day: number;
+  front: string;
+  back: string;
+  objectiveId?: string;
+}
+
+/** Parses a card pack file: { kind: "netplus-card-pack", version: 1, cards: [{ id, day, front, back, objectiveId? }] }. */
+export function parseCardPack(text: string): PackCard[] {
+  let json: unknown;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    throw new Error('The file is not valid JSON.');
+  }
+  if (!isObj(json) || json.kind !== 'netplus-card-pack' || !Array.isArray(json.cards))
+    throw new Error('This is not a card pack.');
+  if (json.version !== 1) throw new Error(`Unsupported card pack version: ${String(json.version)}.`);
+  const cards = json.cards.filter(isObj).flatMap((c) =>
+    str(c.id) && str(c.front).trim() && str(c.back).trim() && num(c.day) >= 1 && num(c.day) <= 60
+      ? [
+          {
+            id: str(c.id),
+            day: Math.round(num(c.day)),
+            front: str(c.front).trim(),
+            back: str(c.back).trim(),
+            objectiveId: optStr(c.objectiveId),
+          },
+        ]
+      : [],
+  );
+  if (!cards.length) throw new Error('The pack has no valid cards.');
+  return cards;
 }

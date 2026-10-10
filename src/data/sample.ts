@@ -106,6 +106,31 @@ export function buildSample(today: string = todayISO()): AppData {
     sessions,
     exams,
     objectiveResults: results,
+    cards: [
+      {
+        id: 'c1',
+        front: 'Which OSI layer do switches work at?',
+        back: 'Layer 2 (Data link)',
+        objectiveId: '1.1',
+        createdOn: addDays(today, -2),
+      },
+      { id: 'c2', front: 'APIPA address range', back: '169.254.0.0/16', objectiveId: '1.7', createdOn: addDays(today, -2) },
+      {
+        id: 'c3',
+        front: 'Default administrative distance of OSPF',
+        back: '110',
+        objectiveId: '2.1',
+        createdOn: addDays(today, -1),
+      },
+    ],
+    cardStates: {
+      'acr:DNS': { stack: 'knew', lastReviewed: addDays(today, -1), reviews: 3 },
+      'acr:DHCP': { stack: 'moment', lastReviewed: addDays(today, -1), reviews: 2 },
+      'acr:EIGRP': { stack: 'looked', lastReviewed: addDays(today, -1), reviews: 1 },
+      'port:Secure Shell (SSH)': { stack: 'knew', lastReviewed: addDays(today, -1), reviews: 2 },
+      'port:Lightweight Directory Access Protocol (LDAP)': { stack: 'while', lastReviewed: addDays(today, -1), reviews: 1 },
+      c1: { stack: 'moment', lastReviewed: addDays(today, -1), reviews: 1 },
+    },
   };
 }
 
@@ -117,5 +142,7 @@ export function emptyData(today: string = todayISO()): AppData {
     sessions: [],
     exams: [],
     objectiveResults: [],
+    cards: [],
+    cardStates: {},
   };
 }

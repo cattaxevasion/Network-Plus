@@ -71,8 +71,10 @@ export function SettingsPage() {
       </section>
 
       <section className="card" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <h2>Flashcards</h2>
-        <p className="muted">Flashcards live in your own app. This link appears on flashcard steps and on the Today card.</p>
+        <h2>External flashcard app</h2>
+        <p className="muted">
+          Optional. Flashcards now live in the app (Flashcards tab). If you also use another app, its link appears there.
+        </p>
         <label className="field">
           App name
           <input

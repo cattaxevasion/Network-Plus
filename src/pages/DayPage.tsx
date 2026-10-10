@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { PHASES, TOTAL_DAYS, getPlanDay } from '../data/plan';
 import { GUIDES } from '../data/steps';
-import { Check, FlashcardLink, StatusChip } from '../components/ui';
+import { STUDY_GUIDE } from '../data/studyGuide';
+import { unlockedDay } from '../lib/cards';
+import { Check, StatusChip } from '../components/ui';
 import { formatDate, todayISO } from '../lib/dates';
 import { stepsFor } from '../lib/daySteps';
 import { examForDay } from '../lib/exams';
@@ -44,6 +46,8 @@ export function DayPage() {
   if (!plan) return <Navigate to="/plan" replace />;
 
   const steps = stepsFor(day);
+  const studyGuide = STUDY_GUIDE[day];
+  const guideCards = data.cards.filter((c) => c.source === 'guide' && c.day === day).length;
   const guide = GUIDES[plan.phase];
   const done = new Set(rec?.stepsDone ?? []);
   const exam = plan.phase !== 'video' ? examForDay(data, day) : undefined;
@@ -99,6 +103,38 @@ export function DayPage() {
         </div>
       </div>
 
+      {studyGuide && (
+        <section className="guide-box" aria-label="Study guide for this day">
+          <div className="label">Study guide</div>
+          {studyGuide.map((part) => (
+            <div key={part.section} className="guide-part">
+              <div className="guide-head">
+                <b className="num">
+                  p.{part.pages[0]}–{part.pages[1]}
+                </b>{' '}
+                · Section {part.section} {part.title}
+                {part.videos && (
+                  <span className="faint">
+                    {' '}
+                    (videos {part.videos[0]}–{part.videos[1]})
+                  </span>
+                )}
+              </div>
+              <ul className="guide-topics">
+                {part.topics.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          {guideCards > 0 && day <= unlockedDay(data) && (
+            <Link className="btn small" to={`/cards/study?deck=guide&day=${day}&size=0&known=1`}>
+              Study guide cards for Day {day} ({guideCards})
+            </Link>
+          )}
+        </section>
+      )}
+
       {/* Steps from the PDF */}
       <section aria-labelledby="steps-title">
         <div className="card-head">
@@ -121,7 +157,14 @@ export function DayPage() {
                   <span className="box">{isDone && <Check />}</span>
                   <span className="label">{s.label}</span>
                 </button>
-                {s.flashcards && <FlashcardLink className="btn small" label="Open" />}
+                {s.flashcards && (
+                  <Link
+                    className="btn small"
+                    to={s.key === 'review-cards' ? '/cards/study?deck=previous&size=0&known=1' : '/cards?add=1'}
+                  >
+                    {s.key === 'review-cards' ? 'Review' : 'Add'}
+                  </Link>
+                )}
                 {s.recordsExam && (
                   <Link className="btn small" to={exam ? `/exams/${exam.id}` : `/exams/new?day=${day}`}>
                     {exam ? `${exam.scorePct}%` : 'Record'}

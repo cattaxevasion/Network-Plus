@@ -3,7 +3,9 @@ import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { DayPage } from './pages/DayPage';
 import { ExamFormPage } from './pages/ExamFormPage';
+import { CardsPage } from './pages/CardsPage';
 import { ExamsPage } from './pages/ExamsPage';
+import { StudyPage } from './pages/StudyPage';
 import { GlossaryPage } from './pages/GlossaryPage';
 import { PlanPage } from './pages/PlanPage';
 import { SettingsPage } from './pages/SettingsPage';
@@ -39,6 +41,8 @@ function Routed() {
           <Route path="exams/:id" element={<ExamFormPage />} />
           <Route path="weak" element={<WeakAreasPage />} />
           <Route path="glossary" element={<GlossaryPage />} />
+          <Route path="cards" element={<CardsPage />} />
+          <Route path="cards/study" element={<StudyPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
