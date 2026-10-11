@@ -6,6 +6,7 @@ import { OBJECTIVES, shortTitle } from '../data/objectives';
 import {
   BUCKET_LABELS,
   DECK_LABELS,
+  GUIDE_TOTAL,
   bucketCounts,
   bucketOf,
   deckCards,
@@ -14,7 +15,6 @@ import {
   unlockedDay,
   type DeckId,
 } from '../lib/cards';
-import { PackImport } from '../components/PackImport';
 import { formatDate, newId, todayISO } from '../lib/dates';
 import type { Flashcard } from '../lib/types';
 import { useStore } from '../state/store';
@@ -33,7 +33,6 @@ export function CardsPage() {
   const prevDay = previousCardDay(data, today);
   const prevCards = deckCards(data, 'previous', today);
   const prevPlanDay = previousPlanDay(data, today);
-  const guideTotal = data.cards.filter((c) => c.source === 'guide').length;
   const upTo = unlockedDay(data);
 
   const studyLink = (deck: DeckId, extra = '') => `/cards/study?deck=${deck}&size=${size}${extra}`;
@@ -110,7 +109,7 @@ export function CardsPage() {
               <div className="faint" style={{ margin: '8px 0 12px' }}>
                 {counts.knew} known · {cards.length - counts.knew} to go
                 {(d === 'acronyms' || d === 'ports') && ' · official N10-009 list'}
-                {d === 'guide' && guideTotal > 0 && ` · up to Day ${upTo} (${guideTotal - cards.length} still locked)`}
+                {d === 'guide' && ` · up to Day ${upTo} (${GUIDE_TOTAL - cards.length} still locked)`}
               </div>
               <div className="btn-row">
                 {cards.length > 0 ? (
@@ -122,7 +121,6 @@ export function CardsPage() {
                     Add your first card
                   </button>
                 )}
-                {d === 'guide' && <PackImport onImport={actions.importPack} compact={guideTotal > 0} />}
                 {(d === 'acronyms' || d === 'ports') && (
                   <Link className="btn small ghost" to={`/glossary?tab=${d}`}>
                     Browse

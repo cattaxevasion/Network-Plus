@@ -3,7 +3,7 @@
 A small personal dashboard for following the Dion Training **CompTIA Network+ (N10-009) 60-Day Study Plan**:
 daily study → practice exams → objective tracking → weak areas → retakes.
 
-Flashcards are built in (official acronyms and ports, your own cards, study-guide card packs).
+Flashcards are built in (official acronyms and ports, study-guide cards for each day, your own cards).
 
 ## Run locally
 
@@ -118,9 +118,9 @@ The Flashcards tab (`src/pages/CardsPage.tsx`, `StudyPage.tsx`, logic in `src/li
 ### Study guide cards
 
 - `src/data/studyGuide.ts` maps each plan day (1–33) to its Study Guide pages, section and topics. The Day page shows them.
-- Cards made from the Study Guide are **not in this repo** (the guide is Dion Training's material). They are imported
-  privately into your account: Flashcards → Study guide → **Import card pack** (a `.json` file with
-  `kind: "netplus-card-pack"`). Re-importing the same pack updates the text and keeps your stacks.
+- `src/data/guideCards.ts` holds about 15 cards per plan day (Days 1–33) written from the Study Guide:
+  description on the front, short term on the back. Facts that looked wrong in the guide were left out.
+  Stacks are saved by card id, so keep ids when editing a card.
 - A day's guide cards appear once you reach that plan day (the first unfinished day).
 
 ## Glossary

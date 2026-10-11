@@ -5,6 +5,7 @@
 // "Knew it right away" cards only when you ask for them.
 
 import { PORTS } from '../data/glossary';
+import { GUIDE_CARDS } from '../data/guideCards';
 import { PLAN, TOTAL_DAYS } from '../data/plan';
 import { currentDay, finishedDate } from './progress';
 import { GLOSSARY } from './glossary';
@@ -59,20 +60,32 @@ export function unlockedDay(data: AppData): number {
   return currentDay(data) ?? TOTAL_DAYS;
 }
 
+const GUIDE: Card[] = GUIDE_CARDS.map(([id, day, objective, front, back]) => ({
+  id,
+  deck: 'guide' as const,
+  front,
+  back,
+  objectives: objective ? [objective] : [],
+  day,
+}));
+
+export const GUIDE_TOTAL = GUIDE.length;
+export const guideCountForDay = (day: number) => GUIDE.filter((c) => c.day === day).length;
+
 export function allCards(data: AppData): Card[] {
   const upTo = unlockedDay(data);
   return [
     ...OFFICIAL,
+    ...GUIDE.filter((c) => (c.day ?? 1) <= upTo),
     ...data.cards
-      .filter((c) => c.source !== 'guide' || (c.day ?? 1) <= upTo)
+      .filter((c) => c.source !== 'guide')
       .map((c) => ({
         id: c.id,
-        deck: c.source === 'guide' ? ('guide' as const) : ('mine' as const),
+        deck: 'mine' as const,
         front: c.front,
         back: c.back,
         objectives: c.objectiveId ? [c.objectiveId] : [],
         createdOn: c.createdOn,
-        day: c.day,
       })),
   ];
 }

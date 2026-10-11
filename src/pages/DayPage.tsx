@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { PHASES, TOTAL_DAYS, getPlanDay } from '../data/plan';
 import { GUIDES } from '../data/steps';
 import { STUDY_GUIDE } from '../data/studyGuide';
-import { unlockedDay } from '../lib/cards';
+import { guideCountForDay, unlockedDay } from '../lib/cards';
 import { Check, StatusChip } from '../components/ui';
 import { formatDate, todayISO } from '../lib/dates';
 import { stepsFor } from '../lib/daySteps';
@@ -47,7 +47,7 @@ export function DayPage() {
 
   const steps = stepsFor(day);
   const studyGuide = STUDY_GUIDE[day];
-  const guideCards = data.cards.filter((c) => c.source === 'guide' && c.day === day).length;
+  const guideCards = guideCountForDay(day);
   const guide = GUIDES[plan.phase];
   const done = new Set(rec?.stepsDone ?? []);
   const exam = plan.phase !== 'video' ? examForDay(data, day) : undefined;
@@ -127,10 +127,14 @@ export function DayPage() {
               </ul>
             </div>
           ))}
-          {guideCards > 0 && day <= unlockedDay(data) && (
+          {guideCards === 0 ? null : day <= unlockedDay(data) ? (
             <Link className="btn small" to={`/cards/study?deck=guide&day=${day}&size=0&known=1`}>
               Study guide cards for Day {day} ({guideCards})
             </Link>
+          ) : (
+            <p className="faint">
+              {guideCards} study-guide cards unlock when you reach Day {day}.
+            </p>
           )}
         </section>
       )}

@@ -19,7 +19,7 @@ import { newId, todayISO } from '../lib/dates';
 import type { AppData, DayStatus, Flashcard, ObjectiveResult, PracticeExam, Reason, Settings, Stack } from '../lib/types';
 import { auth, type AppUser } from './auth';
 import { localBackend, type Backend } from './backend';
-import { archiveLocalData, localStorageBackend, type PackCard } from './storage';
+import { archiveLocalData, localStorageBackend } from './storage';
 
 export type Mode = 'loading' | 'signin' | 'error' | 'setup' | 'live' | 'demo';
 export type SyncStatus = 'idle' | 'saving' | 'saved' | 'offline' | 'conflict' | 'error';
@@ -41,7 +41,6 @@ type Action =
   | { type: 'updateSettings'; settings: Partial<Settings> }
   | { type: 'saveCard'; card: Flashcard }
   | { type: 'deleteCard'; id: string }
-  | { type: 'importPack'; cards: PackCard[]; date: string }
   | { type: 'rateCard'; id: string; stack: Stack; date: string }
   | { type: 'replaceAll'; data: AppData };
 
@@ -141,23 +140,6 @@ function reducer(state: AppData, action: Action): AppData {
         cards: exists ? state.cards.map((c) => (c.id === action.card.id ? action.card : c)) : [...state.cards, action.card],
       };
     }
-    case 'importPack': {
-      // Merge by id: re-importing a newer pack updates text but keeps each card's stack.
-      const byId = new Map(state.cards.map((c) => [c.id, c]));
-      for (const p of action.cards) {
-        const prev = byId.get(p.id);
-        byId.set(p.id, {
-          id: p.id,
-          front: p.front,
-          back: p.back,
-          objectiveId: p.objectiveId,
-          day: p.day,
-          source: 'guide',
-          createdOn: prev?.createdOn ?? action.date,
-        });
-      }
-      return { ...state, cards: [...byId.values()] };
-    }
     case 'deleteCard': {
       const { [action.id]: _removed, ...rest } = state.cardStates;
       return { ...state, cards: state.cards.filter((c) => c.id !== action.id), cardStates: rest };
@@ -229,7 +211,6 @@ function makeActions(api: {
     updateSettings: (settings: Partial<Settings>) => change({ type: 'updateSettings', settings }),
     saveCard: (card: Flashcard) => change({ type: 'saveCard', card }),
     deleteCard: (id: string) => change({ type: 'deleteCard', id }),
-    importPack: (cards: PackCard[]) => change({ type: 'importPack', cards, date: todayISO() }),
     rateCard: (id: string, stack: Stack) => change({ type: 'rateCard', id, stack, date: todayISO() }),
 
     /** First run: create an empty plan with these settings and start saving. */
