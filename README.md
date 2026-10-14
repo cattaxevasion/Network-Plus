@@ -118,9 +118,9 @@ The Flashcards tab (`src/pages/CardsPage.tsx`, `StudyPage.tsx`, logic in `src/li
 ### Study guide cards
 
 - `src/data/studyGuide.ts` maps each plan day (1–33) to its Study Guide pages, section and topics. The Day page shows them.
-- `src/data/guideCards.ts` holds about 15 cards per plan day (Days 1–33) written from the Study Guide:
-  description on the front, short term on the back. Facts that looked wrong in the guide were left out.
-  Stacks are saved by card id, so keep ids when editing a card.
+- `src/data/guideCards.ts` holds every testable fact from the Study Guide for each plan day (Days 1–33, about 2,100 cards):
+  description on the front, short term on the back. Where the guide was clearly wrong the card has the correct fact;
+  garbled lines and demonstration videos were left out. Stacks are saved by card id, so keep ids when editing a card.
 - A day's guide cards appear once you reach that plan day (the first unfinished day).
 
 ## Glossary
